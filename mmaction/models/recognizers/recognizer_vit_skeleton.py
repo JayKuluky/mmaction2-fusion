@@ -29,7 +29,9 @@ class RecognizerViTSkeleton(BaseModel):
                  neck: OptConfigType = None,
                  train_cfg: OptConfigType = None,
                  test_cfg: OptConfigType = None,
-                 data_preprocessor: OptConfigType = None) -> None:
+                 data_preprocessor: OptConfigType = None,
+                 vision_input_key: str = 'rgb',
+                 skeleton_input_key: str = 'skeleton') -> None:
         if data_preprocessor is None:
             data_preprocessor = dict(
                 type='MultiModalDataPreprocessor',
@@ -37,6 +39,9 @@ class RecognizerViTSkeleton(BaseModel):
                     rgb=dict(type='ActionDataPreprocessor'),
                     skeleton=dict(type='ActionDataPreprocessor')))
         super().__init__(data_preprocessor=data_preprocessor)
+
+        self.vision_input_key = vision_input_key
+        self.skeleton_input_key = skeleton_input_key
 
         self.vision_backbone = MODELS.build(vision_backbone)
         self.skeleton_backbone = MODELS.build(skeleton_backbone)
@@ -58,8 +63,15 @@ class RecognizerViTSkeleton(BaseModel):
                                         Dict[str, torch.Tensor]],
                      **kwargs) -> Tuple[ForwardResults, Dict]:
         if isinstance(inputs, dict):
-            vision_inputs = inputs['rgb']
-            skeleton_inputs = inputs['skeleton']
+            vision_inputs = inputs.get(self.vision_input_key,
+                                       inputs.get('rgb'))
+            skeleton_inputs = inputs.get(self.skeleton_input_key,
+                                         inputs.get('skeleton'))
+            if vision_inputs is None or skeleton_inputs is None:
+                raise KeyError('RecognizerViTSkeleton expects both vision '
+                               f'and skeleton inputs, but got keys '
+                               f"{list(inputs.keys())} with mapping "
+                               f"{self.vision_input_key}/{self.skeleton_input_key}.")
         else:
             vision_inputs, skeleton_inputs = inputs
 
