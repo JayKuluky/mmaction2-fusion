@@ -32,6 +32,7 @@ class RecognizerViTSkeleton(BaseModel):
                  data_preprocessor: OptConfigType = None,
                  vision_input_key: str = 'rgb',
                  skeleton_input_key: str = 'skeleton') -> None:
+                 data_preprocessor: OptConfigType = None) -> None:
         if data_preprocessor is None:
             data_preprocessor = dict(
                 type='MultiModalDataPreprocessor',
@@ -72,6 +73,8 @@ class RecognizerViTSkeleton(BaseModel):
                                f'and skeleton inputs, but got keys '
                                f"{list(inputs.keys())} with mapping "
                                f"{self.vision_input_key}/{self.skeleton_input_key}.")
+            vision_inputs = inputs['rgb']
+            skeleton_inputs = inputs['skeleton']
         else:
             vision_inputs, skeleton_inputs = inputs
 
