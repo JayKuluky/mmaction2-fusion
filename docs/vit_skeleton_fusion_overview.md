@@ -23,3 +23,36 @@ This repository extends MMAction2 with a lightweight pipeline that fuses a ViT (
 - **Integration**: Builds a RecognizerViTSkeleton with dummy vision/skeleton backbones, exercises `train_step` and `test_step`, and checks predictions are valid probabilities.
 
 Use these components by registering `SkeletonTransformer` as the skeleton backbone and `TransformerFusionHead` as the classifier when configuring a new recognizer. The defaults make it easy to plug into existing ViT configs while adding skeleton awareness.
+
+## Demo
+- `demo/demo_vit_skeleton_fusion.py` loads both an RGB clip and skeleton keypoints, builds a `RecognizerViTSkeleton` from `demo/demo_configs/vit_skeleton_fusion_demo.py`, and prints the fused top-k predictions. Point it to your own config, video, skeleton pickle/NumPy file, and optional checkpoint/label map to quickly smoke-test the fused pipeline.
+
+## Ready-to-run configs
+- Three fusion configs pair the skeleton transformer with popular ViT-style video backbones:
+  - Swin-Transformer: `configs/recognition/vit_skeleton/swin_skeleton_fusion_8xb8-224-side32-30e_ntu60-mm.py`
+  - SlowFast: `configs/recognition/vit_skeleton/slowfast_skeleton_fusion_8xb8-224-side32-30e_ntu60-mm.py`
+  - TimeSformer: `configs/recognition/vit_skeleton/timesformer_skeleton_fusion_8xb8-224-side8-30e_ntu60-mm.py`
+
+### How to launch training
+1. Prepare RGB videos under `data/nturgbd_videos/` and skeleton annotations at `data/skeleton/ntu60_2d.pkl` (aligned with the NTU60 layout used by the pipelines).
+2. Pick a config above and run:
+   ```bash
+   python tools/train.py <path-to-config>
+   ```
+   (e.g., `python tools/train.py configs/recognition/vit_skeleton/timesformer_skeleton_fusion_8xb8-224-side8-30e_ntu60-mm.py`).
+
+### How to evaluate or demo
+- Evaluate a trained checkpoint:
+  ```bash
+  python tools/test.py <path-to-config> <checkpoint> --eval top_k_accuracy
+  ```
+- Quickly smoke-test with the fused demo script and any of the configs:
+  ```bash
+  python demo/demo_vit_skeleton_fusion.py \
+      --config configs/recognition/vit_skeleton/swin_skeleton_fusion_8xb8-224-side32-30e_ntu60-mm.py \
+      --video <video.mp4> \
+      --skeleton <skeleton.npy or .pkl> \
+      --label-map tools/data/label_map/nturgbd_60.txt \
+      --checkpoint <optional fusion checkpoint>
+  ```
+  The script uses the model’s `vision_input_key`/`skeleton_input_key` to route RGB and pose tensors, so you can swap in any of the fusion configs without code changes.
