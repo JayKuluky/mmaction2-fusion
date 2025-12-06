@@ -8,6 +8,7 @@ from .omni_head import OmniHead
 from .rgbpose_head import RGBPoseHead
 from .slowfast_head import SlowFastHead
 from .timesformer_head import TimeSformerHead
+from .transformer_fusion_head import TransformerFusionHead
 from .tpn_head import TPNHead
 from .trn_head import TRNHead
 from .tsm_head import TSMHead
@@ -19,5 +20,6 @@ from .x3d_head import X3DHead
 __all__ = [
     'BaseHead', 'GCNHead', 'I3DHead', 'MViTHead', 'OmniHead', 'SlowFastHead',
     'TPNHead', 'TRNHead', 'TSMHead', 'TSNAudioHead', 'TSNHead',
-    'TimeSformerHead', 'UniFormerHead', 'RGBPoseHead', 'X3DHead', 'FeatureHead'
+    'TimeSformerHead', 'TransformerFusionHead', 'UniFormerHead', 'RGBPoseHead',
+    'X3DHead', 'FeatureHead'
 ]

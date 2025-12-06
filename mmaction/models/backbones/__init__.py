@@ -16,6 +16,7 @@ from .resnet_omni import OmniResNet
 from .resnet_tin import ResNetTIN
 from .resnet_tsm import ResNetTSM
 from .rgbposeconv3d import RGBPoseConv3D
+from .skeleton_transformer import SkeletonTransformer
 from .stgcn import STGCN
 from .swin import SwinTransformer3D
 from .tanet import TANet
@@ -29,9 +30,9 @@ __all__ = [
     'AAGCN', 'C2D', 'C3D', 'MViT', 'MobileNetV2', 'MobileNetV2TSM',
     'OmniResNet', 'ResNet', 'ResNet2Plus1d', 'ResNet3d', 'ResNet3dCSN',
     'ResNet3dLayer', 'ResNet3dSlowFast', 'ResNet3dSlowOnly', 'ResNetAudio',
-    'ResNetTIN', 'ResNetTSM', 'STGCN', 'SwinTransformer3D', 'TANet',
-    'TimeSformer', 'UniFormer', 'UniFormerV2', 'VisionTransformer', 'X3D',
-    'RGBPoseConv3D'
+    'ResNetTIN', 'ResNetTSM', 'SkeletonTransformer', 'STGCN',
+    'SwinTransformer3D', 'TANet', 'TimeSformer', 'UniFormer', 'UniFormerV2',
+    'VisionTransformer', 'X3D', 'RGBPoseConv3D'
 ]
 
 try:
